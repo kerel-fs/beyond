@@ -222,7 +222,7 @@ CREATION_DATE = {creation_date:{fmt}}
 ORIGINATOR = {originator}
 """.format(
         type=ccsds_type.upper(),
-        creation_date=Date.now(),
+        creation_date=kwargs.get("creation_date", Date.now()),
         originator=kwargs.get("originator", "N/A"),
         version=version,
         fmt=DATE_FMT_DEFAULT,
@@ -244,7 +244,7 @@ def dump_xml_header(data, ccsds_type, version="1.0", **kwargs):
     )
     header = ET.SubElement(top, "header")
     creation_date = ET.SubElement(header, "CREATION_DATE")
-    creation_date.text = Date.now().strftime(DATE_FMT_DEFAULT)
+    creation_date.text = kwargs.get("creation_date", Date.now()).strftime(DATE_FMT_DEFAULT)
     originator = ET.SubElement(header, "ORIGINATOR")
     originator.text = kwargs.get("originator", "N/A")
 
