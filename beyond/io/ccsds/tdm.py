@@ -85,6 +85,8 @@ def _loads_kvn(string):
                 obj = Azimut(path, date, np.radians(-value))
             elif key == "ANGLE_2" and meta["ANGLE_TYPE"] == "AZEL":
                 obj = Elevation(path, date, np.radians(value))
+            elif key == "DOPPLER_INSTANTANEOUS":
+                obj = Doppler(path, date, value)
             else:
                 raise CcsdsError(f"Unknown type : {key}")
 
@@ -137,6 +139,8 @@ def _loads_xml(string):
                 measures.append(Azimut(path, date, np.radians(-value)))
             elif meas_type == "ANGLE_2" and angle_type == "AZEL":
                 measures.append(Elevation(path, date, np.radians(value)))
+            elif meas_type == "DOPPLER_INSTANTANEOUS":
+                measures.append(Doppler(path, date, value))
             else:
                 raise CcsdsError(f"Unknown type : {meas_type}")
 
