@@ -27,14 +27,14 @@ def loads(string, fmt="kvn"):
     return measures
 
 
-def dumps(data, **kwargs):
+def dumps(data, *, meta_args={}, **kwargs):
 
     fmt = get_format(**kwargs)
 
     if fmt == "kvn":
-        string = _dumps_kvn(data, **kwargs)
+        string = _dumps_kvn(data, meta_args=meta_args, **kwargs)
     elif fmt == "xml":
-        string = _dumps_xml(data, **kwargs)
+        string = _dumps_xml(data, meta_args=meta_args, **kwargs)
     else:  # pragma: no cover
         raise CcsdsError(f"Unknown format : {fmt}")
 
@@ -194,7 +194,7 @@ def encode_measurement(m):
     return name, value, value_fmt
 
 
-def _dumps_kvn(data, **kwargs):
+def _dumps_kvn(data, *, meta_args, **kwargs):
 
     filtered = ((path, data.filter(path=path)) for path in data.paths)
 
@@ -203,6 +203,7 @@ def _dumps_kvn(data, **kwargs):
     text = ""
     for path, measure_set in filtered:
         meta = collect_metadata(path, measure_set)
+        meta.update(meta_args)
 
         txt = ["META_START"]
 
@@ -235,7 +236,7 @@ def _dumps_kvn(data, **kwargs):
     return header + "\n" + text
 
 
-def _dumps_xml(data, **kwargs):
+def _dumps_xml(data, *, meta_args, **kwargs):
     filtered = ((path, data.filter(path=path)) for path in data.paths)
 
     top = dump_xml_header(data, "TDM", version="1.0", **kwargs)
@@ -247,6 +248,7 @@ def _dumps_xml(data, **kwargs):
         meta_element = ET.SubElement(segment, "metadata")
 
         meta = collect_metadata(path, measure_set)
+        meta.update(meta_args)
 
         for key, value in meta.items():
             element = ET.SubElement(meta_element, key)
