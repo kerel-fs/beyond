@@ -158,6 +158,22 @@ class Doppler(StationMeasure):
         )
 
 
+class ReceiveFrequency(StationMeasure):
+    def __init__(self, path, participant, date, value):
+        super().__init__(path, date, value)
+        self.participant = participant
+    def from_orbit(self, orb):
+        return NotImplemented
+
+
+class TransmitFrequency(StationMeasure):
+    def __init__(self, path, participant, date, value):
+        super().__init__(path, date, value)
+        self.participant = participant
+    def from_orbit(self, orb):
+        return NotImplemented
+
+
 class PVT(Measure):
     def __init__(self, frame, date, value):
         self.frame = frame
