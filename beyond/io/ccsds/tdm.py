@@ -3,7 +3,7 @@ import lxml.etree as ET
 
 from ...constants import c
 from ...utils import units
-from ...utils.measures import MeasureSet, Range, Azimut, Elevation, Doppler, RightAscension, Declination
+from ...utils.measures import MeasureSet, Range, Azimut, Elevation, Doppler, RightAscension, Declination, ReceiveFrequency, TransmitFrequency
 
 from .commons import (
     CcsdsError,
@@ -205,6 +205,14 @@ def encode_measurement(m):
         name = "ANGLE_2"
         value_fmt = ".8f"
         value = np.degrees(m.value)
+    elif isinstance(m, ReceiveFrequency):
+        name = f"RECEIVE_FREQ_{m.participant}"
+        value_fmt = "16.6f"
+        value = m.value
+    elif isinstance(m, TransmitFrequency):
+        name = f"TRANSMIT_FREQ_{m.participant}"
+        value_fmt = "16.6f"
+        value = m.value
 
     return name, value, value_fmt
 
