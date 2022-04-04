@@ -3,7 +3,7 @@ import lxml.etree as ET
 
 from ...constants import c
 from ...utils import units
-from ...utils.measures import MeasureSet, Range, Azimut, Elevation, Doppler
+from ...utils.measures import MeasureSet, Range, Azimut, Elevation, Doppler, RightAscension, Declination
 
 from .commons import (
     CcsdsError,
@@ -170,6 +170,9 @@ def collect_metadata(path, measure_set):
         meta["RANGE_UNITS"] = "km"
     if "Azimut" in measure_set.types:
         meta["ANGLE_TYPE"] = "AZEL"
+    if "RightAscension" in measure_set.types:
+        meta["ANGLE_TYPE"] = "RADEC"
+        meta["REFERENCE_FRAME"] = "J2000"
     return meta
 
 
@@ -189,6 +192,14 @@ def encode_measurement(m):
     elif isinstance(m, Elevation):
         name = "ANGLE_2"
         value_fmt = ".2f"
+        value = np.degrees(m.value)
+    elif isinstance(m, RightAscension):
+        name = "ANGLE_1"
+        value_fmt = ".8f"
+        value = np.degrees(m.value)
+    elif isinstance(m, Declination):
+        name = "ANGLE_2"
+        value_fmt = ".8f"
         value = np.degrees(m.value)
 
     return name, value, value_fmt

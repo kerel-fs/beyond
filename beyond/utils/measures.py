@@ -132,6 +132,16 @@ class Elevation(StationMeasure):
         )
 
 
+class RightAscension(StationMeasure):
+    def from_orbit(self, orb):
+        return NotImplemented
+
+
+class Declination(StationMeasure):
+    def from_orbit(self, orb):
+        return NotImplemented
+
+
 class Range(StationMeasure):
     def from_orbit(self, orb):
         return self.__class__(
